@@ -1,0 +1,36 @@
+{% extends 'model.html' %}
+{% block content %}
+<form action="/user/modify" method="POST">
+    用户名:
+    <input type="text" name='username' value="{{ user.username }}">
+    密码:
+    <input type="password" name='password' value="{{ user.password }}">
+    <br>
+    性别:
+    男<input type="radio" name='gender' value="男" {% if user.gender == '男' %}checked{% endif %}>
+    女<input type="radio" name='gender' value="女" {% if user.gender == '女' %}checked{% endif %}>
+    保密<input type="radio" name='gender' value="保密" {% if user.gender == '保密' %}checked{% endif %}>
+    手机号:
+    <input type="text" name='phone' value="{{ user.phone }}">
+    <br>
+    头像:
+    <input type="file" name='photo'>
+    <hr>
+    更多信息
+    <table>
+        <tr>
+            <td>城市</td>
+            <td><input type="text" name='city'></td>
+        </tr>
+        <tr>
+            <td>爱好</td>
+            <td><input type="text" name='hobbit'></td>
+        </tr>
+        <tr>
+            <td>个人简介</td>
+            <td><textarea name="des" id="" cols="20" rows="4"></textarea></td>
+        </tr>
+    </table>
+    <input type="submit" class="btn btn-default" value="完成修改">
+</form>
+{% endblock %}

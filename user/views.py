@@ -6,6 +6,7 @@ from flask import request
 
 from user.models import User
 from libs.orm import db
+from blog.views import checkout
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 user_bp.template_folder = './templates'
@@ -27,7 +28,7 @@ def login():
         # session记录username
         session['username'] = username
         # return render_template('home.html')
-        return redirect('/blog/index')
+        return redirect('/user/info')
     else:
         return render_template('login.html')
 
@@ -55,9 +56,48 @@ def register():
 @user_bp.route('/info')
 def info():
     '''用户信息'''
-    return render_template('info.html')
+    if checkout():
+        username = session['username']
+        user = User.query.filter_by(username=username).one()
+        return render_template('info.html',user=user)
+    else:
+        return redirect('/')
+
+
+@user_bp.route('/modify',methods=('POST','GET'))
+def modify():
+    '''修改用户信息'''
+    if checkout():
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            gender = request.form.get('gender')
+            phone = request.form.get('phone')
+            city = request.form.get('city')
+            hobbit = request.form.get('hobbit')
+            des = request.form.get('des')
+
+            photo = request.files.get('photo')
+            if photo:
+                photo.save(f'user/static/img/{username}.jpg')
+            old_user = User.query.filter_by(username=username)
+            old_user.update({
+                    'username': username, 'password': password, 
+                    'gender': gender, 'phone': phone, 
+                    'photo': bool(photo), 'city':city, 
+                    'hobbit': hobbit, 'des': des
+                    })
+            db.session.commit()
+            return render_template('response.html',msg='修改成功')
+        else:
+            username = session['username']
+            user = User.query.filter_by(username=username).one()
+            return render_template('modify.html',user=user)
+    else:
+        return redirect('/')
 
 @user_bp.route('/logout')
 def logout():
     '''用户退出'''
+    session.pop('username')
     return redirect('/user/login')

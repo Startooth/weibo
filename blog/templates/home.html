@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block head %}
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="/blog/index">主页</a></li>
+    <li role="presentation" ><a href="/user/info">个人信息</a></li>
+    <li role="presentation"><a href="/blog/post">发布微博</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<ul>
+    {% for item in data %}
+    <li><a href="">{{ item.title }}</a></li>
+    {% else %}
+    <p>还没有人发表微博呢</p>
+    {% endfor %}
+</ul>
+{% endblock %}

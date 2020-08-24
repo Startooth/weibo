@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 {% block head %}
 <ul class="nav nav-tabs">
-    <li role="presentation"><a href="/article/index">Home</a></li>
-    <li role="presentation" class="active"><a href="/user/info">Private</a></li>
-    <li role="presentation"><a href="/article/post">Blog</a></li>
+    <li role="presentation"><a href="/blog/index">主页</a></li>
+    <li role="presentation" class="active"><a href="/user/info">个人信息</a></li>
+    <li role="presentation"><a href="/blog/post">发布微博</a></li>
 </ul>
 {% endblock %}
+
 {% block content %}
 <div>
     <div id='个人信息'>
-        <div>这里放图片</div>
-        <div>这里修改个人信息</div>
-        <div>这里放个人信息</div>
-        <div>退出</div>
+        <div>
+            {% if user.photo != 0 %}
+            <img style="width: 200px;height:200px;border-radius: 100px;" src="static/img/{{ user.username }}.jpg">
+            {% else %}
+            <img style="width: 200px;height:200px;border-radius: 100px;" src="static/img/default.jfif">
+            {% endif %}
+        </div>
+        <div><a href="/user/modify">这里修改个人信息</a></div>
+        <div>
+            这里放个人信息
+            <table>
+                <tr><td></td></tr>
+            </table>
+        </div>
+        <div>我的关注</div>
+        <a href="/user/logout"><button class="btn btn-default">退出</button></a>
     </div>
     <div id='最近更新'>
         <ul>

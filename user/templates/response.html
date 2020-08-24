@@ -1,4 +1,7 @@
 {% extends 'model.html' %}
 {% block content %}
 {{ msg }}
+{% if msg == '修改成功' %}
+<a href="/user/info">跳转到用户信息页面</a>
+{% endif %}
 {% endblock %}

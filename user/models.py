@@ -10,3 +10,6 @@ class User(db.Model):
     phone = db.Column(db.String(16), unique=True, nullable=False)
     city = db.Column(db.String(16))
     photo = db.Column(db.Boolean, default=False)
+    city = db.Column(db.String(20))
+    hobbit = db.Column(db.String(20))
+    des = db.Column(db.Text)
