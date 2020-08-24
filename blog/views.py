@@ -6,6 +6,10 @@ blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 blog_bp.template_folder = './templates'
 blog_bp.static_folder = './static'
 
+@blog_bp.route('/index')
+def idnex():
+    return render_template('home.html')
+
 @blog_bp.route('/post')
 def post():
     '''发表微博'''

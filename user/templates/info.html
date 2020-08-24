@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block head %}
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="/article/index">Home</a></li>
+    <li role="presentation" class="active"><a href="/user/info">Private</a></li>
+    <li role="presentation"><a href="/article/post">Blog</a></li>
+</ul>
+{% endblock %}
+{% block content %}
+<div>
+    <div id='个人信息'>
+        <div>这里放图片</div>
+        <div>这里修改个人信息</div>
+        <div>这里放个人信息</div>
+        <div>退出</div>
+    </div>
+    <div id='最近更新'>
+        <ul>
+            <li>weibo...</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -8,4 +8,5 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     gender = db.Column(db.Enum('男', '女', '保密'), default='保密')
     phone = db.Column(db.String(16), unique=True, nullable=False)
+    city = db.Column(db.String(16))
     photo = db.Column(db.Boolean, default=False)

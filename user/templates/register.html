@@ -1,0 +1,14 @@
+{% extends 'model.html' %}
+{% block content %}
+<form action="/user/register" method="POST">
+    <h1>用户注册</h1>
+    <input type="text" name='username' placeholder='请输入用户名'>
+    <input type="password" name='password' placeholder='请输入密码'>
+    <input type="password" name='pwd' placeholder='请确认密码'>
+    男<input type="radio" name='gender' value="男">
+    女<input type="radio" name='gender' value="女">
+    保密<input type="radio" name='gender' value="保密">
+    <input type="text" name='phone' placeholder='请输入手机号'>
+    <input type="submit">
+</form>
+{% endblock %}

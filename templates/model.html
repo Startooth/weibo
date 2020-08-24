@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>IMDEX</title>
+</head>
+
+<body>
+    <div id='head'>
+        {% block head %}{% endblock %}
+    </div>
+    <div id='body'>
+        <div>{% block content %}{% endblock %}</div>
+        <div>{% block side %}{% endblock %}</div>
+    </div>
+    <div id='foot'>
+        {% block foot %}{% endblock %}
+    </div>
+</body>
+
+</html>

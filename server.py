@@ -9,7 +9,7 @@ from blog.views import blog_bp
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:zysqwxfx0714@localhost:3306/Blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:zysqwxfx0714@localhost:3306/weibo'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.secret_key = r'dsaf^%*EfdfggfghdnydbrdsdasdadjhGH9-ua'
 
@@ -26,7 +26,7 @@ app.register_blueprint(blog_bp)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
