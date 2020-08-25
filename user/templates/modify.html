@@ -1,6 +1,6 @@
 {% extends 'model.html' %}
 {% block content %}
-<form action="/user/modify" method="POST">
+<form action="/user/modify" method="POST" enctype="multipart/form-data">
     用户名:
     <input type="text" name='username' value="{{ user.username }}">
     密码:

@@ -1,13 +1,45 @@
 {% extends 'base.html' %}
 {% block head %}
-<ul class="nav nav-tabs">
-    <li role="presentation"><a href="/blog/index">主页</a></li>
-    <li role="presentation"><a href="/user/info">个人信息</a></li>
-    <li role="presentation" class="active"><a href="/blog/post">发布微博</a></li>
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="/blog/index">OurShare</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/user/info">我的主页</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">我的关注</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">粉丝列表</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="/blog/post">MyShare</a>
+    </li>
 </ul>
 {% endblock %}
 
 {% block content %}
+{% if op %}
+<form action="/blog/post" method='POST'>
+    <table>
+        <tr>
+            <td>
+                标题<input type="text" name='title' value="{{ blog.title }}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                内容<textarea name='content' cols="30" rows="10">{{ blog.content }}</textarea>
+            </td>
+        </tr>
+        <tr><td><input type="hidden" name='lasttime' value="{{ blog.lasttime }}"></td></tr>
+        <tr>
+            <td align="right" colspan="2"><input type="submit" class="btn btn-default" value="完成修改"></td>
+        </tr>
+    </table>
+</form>
+{% else %}
 <form action="/blog/post" method='POST'>
     <table>
         <tr><td>标题<input type="text" name='title'></td></tr>
@@ -17,4 +49,5 @@
         <tr><td align="right" colspan="2"><input type="submit" class="btn btn-default" value="发布"></td></tr>
     </table>
 </form>
+{% endif %}
 {% endblock %}

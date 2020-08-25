@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang='en'>
     <head>
-        <title>BASE</title>
-        <link rel="stylesheet" href="/static/css/bootstrap.css">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <style>
             *{font-size: 20px;font-family: 微软雅黑;}
         </style>
+        {% block all %}{% endblock %}
     </head>
     <body>
         <div id='head'>
-            {% block head %}{% endblock %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-pad">
+                <div class="navbar-brand" href="#">
+                    <img src="/static/img/logo.jpg" width="60" style="border-radius: 60px;"/>
+                    Welcome To OurShare
+                </div>
+                <div class="collapse navbar-collapse">
+                    {% block head %}{% endblock %}
+                    <div>
+                        <a class="btn btn-outline-success" href="/user/logout">退出登陆</a>
+                    </div>
+                </div>
+            </nav>
         </div>
         <div id='body'>
             <div>{% block content %}{% endblock %}</div>
@@ -18,5 +31,6 @@
         <div id='foot'>
             {% block foot %}{% endblock %}
         </div>
+        <script src="/static/js/bootstrap.min.js"></script>
     </body>
 </html>
