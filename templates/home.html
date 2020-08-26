@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block head %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+        <a class="nav-link" href="/blog/index?page=1">OurShare</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/user/info">我的主页</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">我的关注</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">粉丝列表</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/blog/post">MyShare</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div>
+    <ul>
+        {% for item in data %}
+        <li>
+            <div class="alert alert-warning">
+                {% for user in users %}
+                {% if user.username == item.username %}
+                <img style="width: 50px;border-radius: 50px;" src='{{ user.photo }}'>
+                {% endif %}
+                {% endfor %}
+                &nbsp;&nbsp;<strong>{{ item.username }}</strong>&nbsp;&nbsp;{{ item.lasttime }}
+                <div>
+                    <div>
+                        <a href="/user/show?username={{ item.username }}&wid={{ item.wid }}&page={{ index }}">
+                            {{ item.content[:20] | replace('\n','<br>') | safe }} . . .
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </li>
+        {% else %}
+        <p>还没有人发表微博呢</p>
+        {% endfor %}
+    </ul>
+</div>
+<div style="position: fixed;right:300px ;bottom: 20px;">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link" href="/blog/index?page=1" >首页</a>
+            </li>
+            {% for i in pages %}
+            {% if index == i %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="/blog/index?page={{ i }}">{{ i }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="/blog/index?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            {% endfor %}
+            <li class="page-item">
+                <a class="page-link" href="/blog/index?page={{ max }}">尾页</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

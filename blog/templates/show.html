@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item ">
+        <a class="nav-link" href="/blog/index?page=1">OurShare</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="/user/info">我的主页</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">我的关注</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">粉丝列表</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/blog/post">MyShare</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div>
+    {% if user.photo %}
+    <img style="width: 50px;height:50px;border-radius: 100px;" src="{{ user.photo }}">
+    {% else %}
+    <img style="width: 50px;height:50px;border-radius: 100px;" src="static/img/default.jfif">
+    {% endif %}
+    &nbsp;&nbsp;{{ blog.username }}&nbsp;&nbsp;{{ blog.lasttime }}
+
+    <div class="alert alert-warning" role="alert" style="height: 300px;margin-top: 30px;">
+        <p>{{ blog.content | replace('\n','<br>') | safe }}</p>
+    </div>
+
+    {% if op %}
+    <div class="form-row" style="margin-left:150px;margin-top: 50px;">
+        <div class="form-group col-md-6">
+            <a href="/blog/modify?wid={{ blog.wid }}">
+                <button class="btn btn-outline-info">修改此微博</button>
+            </a>
+        </div>
+        <div class="form-group col-md-6">
+            <a href="/blog/delete?wid={{ blog.wid }}">
+                <button class="btn btn-outline-danger">删除此微博</button>
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div>
+        <button class="btn btn-default">点赞</button>
+        <a href="/blog/index?page={{ page }}">
+            <button class="btn btn-default">返回</button>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

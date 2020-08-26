@@ -1,6 +1,7 @@
 import os
 from flask import session, redirect
 from hashlib import md5, sha256
+import random
 
 
 def make_password(password):
@@ -27,13 +28,15 @@ def save_avatar(avatar_file):
     avatar_file.stream.seek(0)
     filename = md5(file_bin_data).hexdigest()
     base_dir = os.path.dirname(os.path.dirname((os.path.abspath(__file__))))
-    filepath = os.path.join(base_dir, 'static', 'upload', filename)
+    filepath = os.path.join(base_dir, 'static', 'avatar', filename)
     avatar_file.save(filepath)
-    avatar_url = f'/static/upload/{filename}'
+    # avatar_url = os.path.join('static','avatar',filename)
+    avatar_url = f'/static/avatar/{filename}'
     return avatar_url
 
 
 def checkout(func):
+    '''检查用户是否登陆'''
     def check_session(*args, **kwargs):
         username = session.get('username')
         if not username:
@@ -42,3 +45,9 @@ def checkout(func):
             return func(*args, **kwargs)
     check_session.__name__ = func.__name__
     return check_session
+
+
+def random_word(length):
+    '''随机生成汉字'''
+    words = [chr(random.randint(25000, 30000)) for i in range(length)]
+    return ''.join(words)

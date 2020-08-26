@@ -9,7 +9,7 @@ from libs.utils import checkout, save_avatar, make_password, check_password
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 user_bp.template_folder = './templates'
-user_bp.static_folder = './static'
+# user_bp.static_folder = './static'
 
 
 @user_bp.route('/login',methods=('POST','GET'))
@@ -59,7 +59,7 @@ def info():
     '''用户信息'''
     username = session['username']
     user = User.query.filter_by(username=username).one()
-    blog = Blog.query.filter_by(username=username).all()
+    blog = Blog.query.filter_by(username=username).order_by(Blog.lasttime.desc()).limit(10).all()
     return render_template('info.html',user=user,blogs=blog)
 
 
@@ -76,9 +76,9 @@ def modify():
         hobbit = request.form.get('hobbit')
         des = request.form.get('des')
 
-        photo_file = request.files.get('photo')
-        if photo_file:
-            photo = save_avatar(photo_file)
+        photo = request.files.get('photo')
+        if photo:
+            photo = save_avatar(photo)
         old_user = User.query.filter_by(username=username)
         old_user.update({
                 'username': username, 'password': make_password(password), 
@@ -99,11 +99,12 @@ def modify():
 def show():
     '''显示文章内容'''
     username = request.args.get('username')
+    page = request.args.get('page')
     wid = request.args.get('wid')
     op = request.args.get('op')
     blog = Blog.query.filter_by(wid=wid).one()
     user = User.query.filter_by(username=username).one()
-    return render_template('show.html', blog=blog, user=user,op=op)
+    return render_template('show.html', blog=blog, user=user,op=op,page=page)
 
 
 @user_bp.route('/logout')

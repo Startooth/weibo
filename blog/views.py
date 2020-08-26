@@ -1,4 +1,5 @@
 import datetime
+import math
 
 from flask import Blueprint
 from flask import render_template, redirect, request
@@ -12,15 +13,34 @@ from user.models import User
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 blog_bp.template_folder = './templates'
-blog_bp.static_folder = './static'
+# blog_bp.static_folder = './static'
 
 
 @blog_bp.route('/index')
 @checkout
 def idnex():
     '''查看主页'''
-    data = Blog.query.order_by(Blog.lasttime.desc()).all()
-    return render_template('home.html',data=data)
+    page = int(request.args.get('page',1))
+    per_page = 30
+    offset = per_page * (page - 1)
+    data = Blog.query.order_by(Blog.lasttime.desc()).limit(per_page).offset(offset).all()
+    # 显示分页
+    max_page = math.ceil(Blog.query.count() / per_page)
+    if page <= 3:
+        start, end = 1, 7
+    elif page>= (max_page - 2):
+        start, end = (max_page - 6), max_page
+    else:
+        start, end = (page - 3), (page + 3)
+    pages = range(start, end + 1)
+    # 取出每页对应user的信息
+    users = []
+    for item in data:
+        users.append(User.query.filter_by(username=item.username).one())
+    users = list(set(users))
+    # 获取当前页码
+    index = int(request.args.get('page'))
+    return render_template('home.html',data=data,pages=pages,users=users,max=max_page,index=index)
 
 @blog_bp.route('/hot')
 def hot():
@@ -32,12 +52,11 @@ def hot():
 def post():
     '''发表微博'''
     if request.method == 'POST':
-        title = request.form.get('title')
         content = request.form.get('content')
         time = datetime.datetime.now()
         lasttime = datetime.datetime.strftime(time, '%Y-%m-%d %H:%M:%S')
         username = session['username']
-        blog = Blog(title=title,content=content,lasttime=lasttime,username=username)
+        blog = Blog(content=content,lasttime=lasttime,username=username)
         db.session.add(blog)
         db.session.commit()
         return redirect('/user/info')
@@ -49,15 +68,22 @@ def post():
 @checkout
 def modify():
     '''修改微博'''
+    # 检查是否是自己修改操作
+    wid = int(request.form.get('wid', 0)) or int(request.args.get('wid', 0))
+    blog = Blog.query.get(wid)
+    if blog.username != session['username']:
+        return render_template('response', msg='请先登录！')
+
     if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
-        wid = request.form.get('wid')
+        content = request.form.get('content','').strip()
         now = datetime.datetime.now()
         time = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
-        old_blog = Blog.query.filter_by(wid=wid).one()
+        # 微博不能为空
+        if not content:
+            return render_template('post.html',msg='微博内容不能为空',blog=blog)
         # 修改原微博
-        old_blog.update({'wid':wid, 'title':title, 'content':content, 'lasttime':time})
+        Blog.query.filter_by(wid=wid).update(
+            {'wid': wid, 'title': title, 'content': content, 'lasttime': time})
         db.session.commit()
         return redirect('/user/info')
     else:
