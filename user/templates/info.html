@@ -1,4 +1,14 @@
 {% extends 'base.html' %}
+{% block all %}
+<style>
+    .a2:link {color: #392f41;}
+    .a2:visited {color: #392f41}
+    .a2:hover {color: #ffb3a7;text-decoration: none;}
+    .a2:active {color: #f0fcff}
+</style>
+{% endblock %}
+
+
 {% block head %}
 <ul class="navbar-nav mr-auto">
     <li class="nav-item ">
@@ -26,6 +36,7 @@
             <tr><td align="center">
                 <img style="width: 200px;height:200px;border-radius: 100px;" src="{{ user.photo }}">
             </td></tr>
+            <tr><td align="center">{{ user.username }}</td></tr>
             <tr><td align="center">
                 <a href="/user/modify?wid={{ blogs.wid }}">
                     <svg class="bi" width="32" height="32" fill="currentColor">
@@ -68,7 +79,7 @@
         <ul>
             {% for blog in blogs %}
             <li>
-                <a href="/user/show?username={{ blog.username }}&wid={{ blog.wid }}&op=mine">{{ blog.content[:10] }}...</a>
+                <a class='a2' href="/user/show?username={{ blog.username }}&wid={{ blog.wid }}&op=mine">{{ blog.content[:10] }}...</a>
                 &nbsp;&nbsp;{{ blog.lasttime }}
             </li>
             {% else %}

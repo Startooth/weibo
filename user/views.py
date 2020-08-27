@@ -3,7 +3,7 @@ from flask import render_template, redirect, request
 from flask import session
 
 from user.models import User
-from blog.models import Blog
+from blog.models import Blog, Comment, Thumb
 from libs.orm import db
 from libs.utils import checkout, save_avatar, make_password, check_password
 
@@ -25,7 +25,9 @@ def login():
         if not check_password(password,user.password):
             return render_template('response.html', msg='用户名密码错误！')
         # session记录username
+        user = User.query.filter_by(username=username).one()
         session['username'] = username
+        session['uid'] = user.uid
         # return render_template('home.html')
         return redirect('/user/info')
     else:
@@ -98,13 +100,21 @@ def modify():
 @checkout
 def show():
     '''显示文章内容'''
-    username = request.args.get('username')
+    # username = request.args.get('username')
+    username = session['username']
     page = request.args.get('page')
     wid = request.args.get('wid')
-    op = request.args.get('op')
+    op = request.args.get('op',0)
     blog = Blog.query.filter_by(wid=wid).one()
     user = User.query.filter_by(username=username).one()
-    return render_template('show.html', blog=blog, user=user,op=op,page=page)
+
+    # 获取当前文章评论
+    comment = Comment.query.filter_by(wid=wid).order_by(Comment.time.desc())
+
+    # 确认当前文章是否被当前用户点赞
+    uid = session['uid']
+    thumb = int(Thumb.query.filter_by(uid=uid).filter_by(wid=wid).count())
+    return render_template('show.html', blog=blog, user=user,op=op,page=page,comment=comment,thumb=thumb)
 
 
 @user_bp.route('/logout')

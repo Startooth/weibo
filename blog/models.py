@@ -34,3 +34,28 @@ class Blog(db.Model):
         db.session.add_all(wb_list)
         db.session.commit()
     
+class Comment(db.Model):
+    '''初始化评论功能表'''
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, nullable=False, index=True)
+    wid = db.Column(db.Integer, nullable=False, index=True)
+    cid = db.Column(db.Integer, nullable=False, index=True, default=0)
+    content = db.Column(db.Text, nullable=False)
+    time = db.Column(db.DateTime)
+
+    @property
+    def author(self):
+        return User.query.get(self.uid)
+    
+    @property
+    def upper(self):
+        if self.id == 0:
+            return None
+        else:
+            return Comment.query.get(self.cid)
+
+class Thumb(db.Model):
+    __tablename__ = 'thumb'
+    uid = db.Column(db.Integer, primary_key=True)
+    wid = db.Column(db.Integer, primary_key=True)

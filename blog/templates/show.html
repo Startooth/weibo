@@ -21,38 +21,132 @@
 {% endblock %}
 
 {% block content %}
-<div>
-    {% if user.photo %}
-    <img style="width: 50px;height:50px;border-radius: 100px;" src="{{ user.photo }}">
-    {% else %}
-    <img style="width: 50px;height:50px;border-radius: 100px;" src="static/img/default.jfif">
-    {% endif %}
-    &nbsp;&nbsp;{{ blog.username }}&nbsp;&nbsp;{{ blog.lasttime }}
-
-    <div class="alert alert-warning" role="alert" style="height: 300px;margin-top: 30px;">
-        <p>{{ blog.content | replace('\n','<br>') | safe }}</p>
-    </div>
-
-    {% if op %}
-    <div class="form-row" style="margin-left:150px;margin-top: 50px;">
-        <div class="form-group col-md-6">
-            <a href="/blog/modify?wid={{ blog.wid }}">
-                <button class="btn btn-outline-info">修改此微博</button>
-            </a>
-        </div>
-        <div class="form-group col-md-6">
-            <a href="/blog/delete?wid={{ blog.wid }}">
-                <button class="btn btn-outline-danger">删除此微博</button>
-            </a>
-        </div>
-    </div>
-    {% else %}
+<img style="width: 50px;height:50px;border-radius: 100px;" src="{{ user.photo }}">
+&nbsp;&nbsp;{{ blog.username }}&nbsp;&nbsp;{{ blog.lasttime }}
+<div class="alert alert-warning" role="alert" style="height: 300px;margin-top: 30px;">
     <div>
-        <button class="btn btn-default">点赞</button>
-        <a href="/blog/index?page={{ page }}">
-            <button class="btn btn-default">返回</button>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;{{ blog.content | replace('\n','<br>') | safe }}</p>
+    </div>
+
+
+    <!-- 点赞 -->
+    {% if thumb == 0 %}
+    <a href="/blog/thumb?wid={{ blog.wid }}&uid={{ session['uid'] }}&page={{ page }}&thumb=1">
+    <div id='before' style="position: absolute;bottom: 20px;right: 40px;
+            cursor: pointer;">
+        <svg class="bi" width="32" height="32" fill="currentColor" style="color:#ff4777;">
+            <use xlink:href="/static/css/bootstrap-icons.svg#suit-heart" />
+        </svg>
+    </div>
+    </a>
+    {% else %}
+    <a href="/blog/thumb?wid={{ blog.wid }}&uid={{ session['uid'] }}&page={{ page }}&thumb=-1">
+    <div id='after' style="position: absolute;bottom: 20px;right: 40px;
+        cursor: pointer;">
+        <svg class="bi" width="32" height="32" fill="currentColor" style="color:#ff4777;">
+            <use xlink:href="/static/css/bootstrap-icons.svg#suit-heart-fill" />
+        </svg>
+    </div>
+    </a>
+    {% endif %}
+    <div style="position: absolute;bottom: 0px;right: 20px;">
+        <p id='thumb'>{{ blog.thumb }}</p>
+    </div>
+
+</div>
+<!-- 他人访问和自己访问的不同显示 -->
+{% if op != 0 %}
+<div class="form-row" style="margin-left:150px;margin-top: 50px;">
+    <div class="form-group col-md-4">
+        <a href="/blog/modify?wid={{ blog.wid }}">
+            <button class="btn btn-outline-info">修改此微博</button>
         </a>
     </div>
-    {% endif %}
+    <div class="form-group col-md-4">
+        <a href="/user/info">
+            <button class="btn btn-outline-success">返回</button>
+        </a>
+    </div>
+    <div class="form-group col-md-4">
+        <a href="/blog/delete?wid={{ blog.wid }}">
+            <button class="btn btn-outline-danger">删除此微博</button>
+        </a>
+    </div>
 </div>
+{% else %}
+{% endif %}
+
+<!-- 评论区 -->
+<div class="alert alert-light" role="alert" style="clear: both;margin-bottom: 0px;">
+    <form action="/blog/comment" method="POST">
+        <div class="form-row" style="padding: 0px">
+            <div class="form-group col-md-10" style="padding-right: 4px;">
+                <textarea class="form-control" name="content" cols="30" rows="1"></textarea>
+                <input type="hidden" name="wid" value="{{ blog.wid }}">
+                <input type="hidden" name="page" value="{{ page }}">
+            </div>
+            <div class="form-group col-md-2" style="padding-left: 4px;">
+                <button class="btn btn-outline-info">发表评论</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 评论展示区 -->
+{% for cmt in comment %}
+<div class="alert alert-light" role="alert" 
+    style="margin-bottom: 5px; margin-left: 100px; width: 800px;font-size: 20px;">
+    {% if cmt.cid == 0 %}
+    <strong>{{ cmt.author.username }}</strong>:<br>
+    {% else %}
+    <strong>{{ cmt.author.username }}</strong>&nbsp;&nbsp;
+    <span style="color: darkturquoise;">to</span>&nbsp;&nbsp;
+    <strong>{{ cmt.upper.author.username }}</strong>:
+    {% endif %}
+    <div>
+        <span class='cmt'>{{ cmt.content }}</span>
+        <!-- 删除按钮 -->
+        <div style="float: right;">
+            {% if session.uid == cmt.uid %}
+            {% if cmt.content != '当前评论已被删除' %}
+            <a class="text-danger" href="/blog/drop?cid={{ cmt.id }}">删除该评论</a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <hr class='cmt' style="clear: both;">
+
+    <!-- 回复按钮 -->
+    <div style="height: 30px;">
+    <p class="cmt" style="float: left;">
+        <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseExample{{ cmt.id }}"
+         style="height: 35px;">
+            <p style="font-size: 15px;">回复</p>
+        </button>
+    </p>
+    <p style="float: right;">{{ cmt.time }}</p>
+    </div>
+    <div class="collapse" id="collapseExample{{ cmt.id }}">
+        <div style="height: 55px;width: 700px; padding: 1px;">
+            <form action="/blog/comment" method="POST">
+                <div style="float: left;">
+                    <div style="margin: 1px;width: 620px;" >
+                        <textarea class="form-control" name="content" cols="18" rows="1"></textarea>
+                    </div>
+                    <input type="hidden" name="wid" value="{{ blog.wid }}">
+                    <input type="hidden" name="page" value="{{ page }}">
+                    <input type="hidden" name="cid" value="{{ cmt.id }}">
+                </div>
+                <div style="float: right;">
+                    <button class="btn btn-outline-info" style="height: 46px;">
+                        <p style="font-size: 20px;">发表</p>
+                    </button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+{% endfor %}
+
 {% endblock %}

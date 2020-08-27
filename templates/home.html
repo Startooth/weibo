@@ -1,4 +1,14 @@
 {% extends 'base.html' %}
+
+{% block all %}
+<style>
+    .a1:link{color: #392f41;}
+    .a1:visited{color:#392f41}
+    .a1:hover{color: #ffb3a7;text-decoration: none;}
+    .a1:active{color:#f0fcff}
+</style>
+{% endblock %}
+
 {% block head %}
 <ul class="navbar-nav mr-auto">
     <li class="nav-item active">
@@ -33,7 +43,7 @@
                 &nbsp;&nbsp;<strong>{{ item.username }}</strong>&nbsp;&nbsp;{{ item.lasttime }}
                 <div>
                     <div>
-                        <a href="/user/show?username={{ item.username }}&wid={{ item.wid }}&page={{ index }}">
+                        <a class='a1' href="/user/show?username={{ item.username }}&wid={{ item.wid }}&page={{ index }}">
                             {{ item.content[:20] | replace('\n','<br>') | safe }} . . .
                         </a>
                     </div>
