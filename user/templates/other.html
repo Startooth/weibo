@@ -8,7 +8,6 @@
 </style>
 {% endblock %}
 
-
 {% block content %}
 
     <!-- 个人简介 -->
@@ -17,20 +16,30 @@
             <table class="table table-borderless">
                 <tr>
                     <td align="center">
-                        <img style="width: 200px;height:200px;border-radius: 100px;" src="{{ user.photo }}">
+                        <div style="width: 200px;height:200px;">
+                            <img style="width: 200px;height:200px;border-radius: 100px;" src="{{ user.photo }}">
+                            {% if is_followed %}
+                            <a href="/user/follow?fid={{ user.uid }}&check=1">
+                            <div style="position: relative;right: 0px;bottom: 0px;">
+                                <svg class="bi" width="32" height="32" fill="currentColor" style="color:#f47893;">
+                                    <use xlink:href="/static/css/bootstrap-icons.svg#person-check-fill" />
+                                </svg>
+                            </div>
+                            </a>
+                            {% else %}
+                            <a href="/user/follow?fid={{ user.uid }}&check=0">
+                            <div style="position: relative;right: 0px;bottom: 0px;">
+                                <svg class="bi" width="32" height="32" fill="currentColor" style="color:#70f3ff;">
+                                    <use xlink:href="/static/css/bootstrap-icons.svg#person-plus-fill" />
+                                </svg>
+                            </div>
+                            </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td align="center">{{ user.username }}</td>
-                </tr>
-                <tr>
-                    <td align="center">
-                        <a href="/user/modify?wid={{ blogs.wid }}">
-                            <svg class="bi" width="32" height="32" fill="currentColor">
-                                <use xlink:href="/static/css/bootstrap-icons.svg#gear-fill" />
-                            </svg>
-                        </a>
-                    </td>
                 </tr>
             </table>
         </div>
@@ -38,7 +47,7 @@
             <table class='table'>
                 <tr>
                     <td colspan="2" align="center">
-                        <strong>我的个人信息</strong>
+                        <strong>Ta的个人信息</strong>
                     </td>
                 </tr>
                 <tr>
@@ -89,7 +98,7 @@
                 &nbsp;&nbsp;{{ blog.lasttime }}
             </li>
             {% else %}
-            <p>您还没有一篇微博呢，快去写一篇吧</p>
+            <p>这个人很懒，什么都没留下呢</p>
             {% endfor %}
         </ul>
     </div>

@@ -1,28 +1,17 @@
 {% extends 'base.html' %}
-
-{% block head %}
-<ul class="navbar-nav mr-auto">
-    <li class="nav-item ">
-        <a class="nav-link" href="/blog/index?page=1">OurShare</a>
-    </li>
-    <li class="nav-item active">
-        <a class="nav-link" href="/user/info">我的主页</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">我的关注</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">粉丝列表</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="/blog/post">MyShare</a>
-    </li>
-</ul>
+{% block all %}
+<style>
+    a:hover {text-decoration: none;}
+</style>
 {% endblock %}
 
 {% block content %}
-<img style="width: 50px;height:50px;border-radius: 100px;" src="{{ blog.author.photo }}">
-&nbsp;&nbsp;{{ blog.username }}&nbsp;&nbsp;{{ blog.lasttime }}
+<a href="/user/other?fid={{ blog.author.uid }}&fname={{ blog.author.username }}">
+    <img style="width: 50px;height:50px;border-radius: 100px;" src="{{ blog.author.photo }}">
+</a>
+&nbsp;&nbsp;
+<strong style="color: #2edfa3;">{{ blog.username }}</strong>
+&nbsp;&nbsp;{{ blog.lasttime }}
 <div class="alert alert-warning" role="alert" style="height: 300px;margin-top: 30px;">
     <div>
         <p>&nbsp;&nbsp;&nbsp;&nbsp;{{ blog.content | replace('\n','<br>') | safe }}</p>
@@ -32,7 +21,7 @@
     <!-- 点赞 -->
     {% if thumb == 0 %}
     <a href="/blog/thumb?wid={{ blog.wid }}&uid={{ session['uid'] }}&page={{ page }}&thumb=1">
-    <div id='before' style="position: absolute;bottom: 20px;right: 40px;
+    <div id='before' style="position: absolute;bottom: 20px;right: 60px;
             cursor: pointer;">
         <svg class="bi" width="32" height="32" fill="currentColor" style="color:#ff4777;">
             <use xlink:href="/static/css/bootstrap-icons.svg#suit-heart" />
@@ -41,7 +30,7 @@
     </a>
     {% else %}
     <a href="/blog/thumb?wid={{ blog.wid }}&uid={{ session['uid'] }}&page={{ page }}&thumb=-1">
-    <div id='after' style="position: absolute;bottom: 20px;right: 40px;
+    <div id='after' style="position: absolute;bottom: 20px;right: 60px;
         cursor: pointer;">
         <svg class="bi" width="32" height="32" fill="currentColor" style="color:#ff4777;">
             <use xlink:href="/static/css/bootstrap-icons.svg#suit-heart-fill" />
@@ -49,7 +38,7 @@
     </div>
     </a>
     {% endif %}
-    <div style="position: absolute;bottom: 0px;right: 20px;">
+    <div style="position: absolute;bottom: 0px;right: 40px;">
         <p id='thumb'>{{ blog.thumb }}</p>
     </div>
 
@@ -97,10 +86,13 @@
 <div class="alert alert-light" role="alert" 
     style="margin-bottom: 5px; margin-left: 100px; width: 800px;font-size: 20px;">
     {% if cmt.cid == 0 %}
+    <img style="width: 30px;height:30px;border-radius: 100px;" src="{{ cmt.author.photo }}">
     <strong>{{ cmt.author.username }}</strong>:<br>
     {% else %}
+    <img style="width: 30px;height:30px;border-radius: 100px;" src="{{ cmt.author.photo }}">
     <strong>{{ cmt.author.username }}</strong>&nbsp;&nbsp;
     <span style="color: darkturquoise;">to</span>&nbsp;&nbsp;
+    <img style="width: 30px;height:30px;border-radius: 100px;" src="{{ cmt.upper.author.photo }}">
     <strong>{{ cmt.upper.author.username }}</strong>:
     {% endif %}
     <div>

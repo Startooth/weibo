@@ -1,49 +1,71 @@
-{% extends 'model.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <form action="/user/modify" method="POST" enctype="multipart/form-data">
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label>用户名</label>
-            <input type="text" class="form-control" name='username' value="{{ user.username }}">
-        </div>
-        <div class="form-group col-md-6">
-            <label>密码</label>
-            <input type="password" class="form-control" name='password'>
-        </div>
+    <div style="float: left;">
+    <table class="table table-borderless">
+        <tr>
+            <td><span class="align-text-top">Username</span></td>
+            <td>
+                <input type="text" class="form-control" name='username' value="{{ user.username }}">
+            </td>
+        </tr>
+        <tr>
+            <td><span class="align-text-top">Password</span></td>
+            <td>
+                <input type="password" class="form-control" name='password'>
+            </td>
+        </tr>
+        <tr>
+            <td><span class="align-text-top">Phone</span></td>
+            <td>
+                <input type="text" class="form-control" name='phone' value="{{ user.phone }}">
+            </td>
+        </tr>
+        <tr>
+            <td><span class="align-text-top">Gender</span></td>
+            <td>
+                小哥哥<input type="radio" name='gender' value="男" {% if user.gender == '男' %}checked{% endif %}>
+                小姐姐<input type="radio" name='gender' value="女" {% if user.gender == '女' %}checked{% endif %}>
+                不能说哦<input type="radio" name='gender' value="保密" {% if user.gender == '保密' %}checked{% endif %}>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="photo">
+                    <label class="custom-file-label" for="customFileLang">上传头像...</label>
+                </div>
+            </td>
+        </tr>
+    </table>
     </div>
-    <div class="form-check">
-        <label>性别</label>
-        小哥哥<input type="radio" name='gender' value="男" {% if user.gender == '男' %}checked{% endif %}>
-        小姐姐<input type="radio" name='gender' value="女" {% if user.gender == '女' %}checked{% endif %}>
-        不能说哦<input type="radio" name='gender' value="保密" {% if user.gender == '保密' %}checked{% endif %}>
+    <div style="float: right;">
+    <p>More Informations</p>
+    <table class="table table-borderless">
+        <tr>
+            <td><span class="align-text-top">City</span></td>
+            <td>
+                <input type="text" class="form-control" name='city' value="{{ user.city }}">
+            </td>
+        </tr>
+        <tr>
+            <td><span class="align-text-top">Hobbit</span></td>
+            <td>
+                <input type="text" class="form-control" name='hobbit' value="{{ user.hobbit }}">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">Bio</td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="3">
+                <textarea name="des" cols="40" rows="3">{{ user.des }}</textarea>
+            </td>
+        </tr>
+    </table>
     </div>
-    <div class="form-group">
-        <div class="form-group col-md-6">
-            <label>手机号</label>
-            <input type="text" class="form-control" name='phone' value="{{ user.phone }}">
-        </div>
-        <div class="form-group col-md-6">
-            <input type="file" class="custom-file-input" name="photo">
-            <label class="custom-file-label" for="customFile">上传头像...</label>
-        </div>
+    <div style="clear: both;margin-left: 420px;">
+        <button type="submit" class="btn btn-primary">完成修改</button>
     </div>
-
-    <hr>
-    <p>更多信息</p>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label>城市</label>
-            <input type="text" class="form-control" name='city' value="{{ user.city }}">
-        </div>
-        <div class="form-group col-md-6">
-            <label>爱好</label>
-            <input type="text" class="form-control" name='hobbit' value="{{ user.hobbit }}">
-        </div>
-    </div>
-    <div>
-        <label>个人简介</label>
-        <div><textarea name="des" cols="40" rows="3">{{ user.des }}</textarea></div>
-    </div>
-    <button type="submit" class="btn btn-primary">完成修改</button>
 </form>
 {% endblock %}

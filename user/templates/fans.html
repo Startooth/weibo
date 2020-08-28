@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block all %}
+<style>
+    a:hover{text-decoration: none;}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div style="width: 80%;">
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-group-item">
+            <a href="/user/other?fid={{ user.uid }}">
+                <img style="width: 50px;height: 50px;border-radius: 60px;" src="{{ user.photo }}">
+            </a>
+            &emsp;
+            <span class="text-primary">{{ user.username }}</span>
+            &emsp;
+            <span class="text-primary">
+                {% if user.gender == '男' %}
+                小哥哥
+                {% elif user.gender == '女' %}
+                小姐姐
+                {% else %}
+                不能说哦
+                {% endif %}
+            </span>
+            &emsp;
+            <span class="text-info">{{ user.city }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

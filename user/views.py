@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, redirect, request
 from flask import session
 
-from user.models import User
+from user.models import User, Follow
 from blog.models import Blog, Comment, Thumb
 from libs.orm import db
 from libs.utils import checkout, save_avatar, make_password, check_password
@@ -30,7 +30,7 @@ def login():
         # return render_template('home.html')
         return redirect('/user/info')
     else:
-        return render_template('index.html')
+        return redirect('/')
 
 @user_bp.route('/register',methods=('POST','GET'))
 def register():
@@ -62,6 +62,29 @@ def info():
     user = User.query.filter_by(username=username).one()
     blog = Blog.query.filter_by(username=username).order_by(Blog.lasttime.desc()).limit(10).all()
     return render_template('info.html',user=user,blogs=blog)
+
+
+@user_bp.route('/other')
+@checkout
+def other():
+    fid = int(request.args.get('fid'))
+    fname = request.args.get('fname')
+
+    if fid == session.get('uid'):
+        return redirect('/user/info')
+
+    user = User.query.get(fid)
+    blog = Blog.query.filter_by(username=fname).order_by(Blog.lasttime.desc()).limit(10).all()
+    uid = session.get('uid')
+
+    if uid:
+        if Follow.query.filter_by(uid=uid, fid=fid).count():
+            is_followed = True
+        else:
+            is_followed = False
+    else:
+        is_followed = False
+    return render_template('other.html', user=user, blogs=blog, is_followed=is_followed)
 
 
 @user_bp.route('/modify',methods=('POST','GET'))
@@ -110,9 +133,49 @@ def show():
     comment = Comment.query.filter_by(wid=wid).order_by(Comment.time.desc())
 
     # 确认当前文章是否被当前用户点赞
-    uid = session['uid']
-    thumb = int(Thumb.query.filter_by(uid=uid).filter_by(wid=wid).count())
+    uid = session.get('uid')
+    if uid:
+        thumb = int(Thumb.query.filter_by(uid=uid).filter_by(wid=wid).count())
+    else:
+        thumb = 0
     return render_template('show.html', blog=blog, op=op,page=page,comment=comment,thumb=thumb)
+
+
+@user_bp.route('/follow')
+def follow():
+    '''关注'''
+    fid = int(request.args.get('fid'))
+    check = int(request.args.get('check'))
+    uid = session['uid']
+
+    # 不能关注自己
+    if fid == uid:
+        return render_template('response',msg='拒绝访问')
+    
+    follow_relation = Follow(uid=uid,fid=fid)
+    if check == 1:
+        User.query.filter_by(uid=uid).update({'follow':User.follow - 1})
+        User.query.filter_by(uid=fid).update({'fans': User.fans - 1})
+        Follow.query.filter_by(uid=uid,fid=fid).delete()
+    else:
+        User.query.filter_by(uid=uid).update({'follow': User.follow + 1})
+        User.query.filter_by(uid=fid).update({'fans': User.fans + 1})
+        db.session.add(follow_relation)
+    db.session.commit()
+    user = User.query.get(fid)
+    return redirect(f'/user/other?fid={fid}&fname={user.username}')
+
+
+@user_bp.route('/fans')
+def fans():
+    '''查看粉丝列表'''
+    uid = session['uid']
+    # 找到自己的粉丝的 ID 列表
+    fans = Follow.query.filter_by(fid=uid).values('uid')
+    fans_uid_list = [uid for (uid,) in fans]
+
+    users = User.query.filter(User.uid.in_(fans_uid_list))
+    return render_template('fans.html', users=users)
 
 
 @user_bp.route('/logout')

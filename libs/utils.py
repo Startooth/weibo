@@ -1,7 +1,9 @@
 import os
-from flask import session, redirect
 from hashlib import md5, sha256
 import random
+import math
+
+from flask import session, redirect
 
 
 def make_password(password):
@@ -51,3 +53,4 @@ def random_word(length):
     '''随机生成汉字'''
     words = [chr(random.randint(25000, 30000)) for i in range(length)]
     return ''.join(words)
+

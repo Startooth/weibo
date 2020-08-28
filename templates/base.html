@@ -20,7 +20,27 @@
                     Welcome To OurShare
                 </div>
                 <div class="collapse navbar-collapse">
-                    {% block head %}{% endblock %}
+                    <!-- 导航栏 -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item {% if request.path == '/blog/index' %}active{% endif %}">
+                            <a class="nav-link" href="/blog/index">OurShare</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/blog/hot' %}active{% endif %}">
+                            <a class="nav-link" href="/blog/hot">HotShare</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/user/info' %}active{% endif %}">
+                            <a class="nav-link" href="/user/info">个人主页</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/blog/attention' %}active{% endif %}">
+                            <a class="nav-link" href="/blog/attention">我的关注</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/user/fans' %}active{% endif %}">
+                            <a class="nav-link" href="/user/fans">粉丝列表</a>
+                        </li>
+                        <li class="nav-item {% if request.path == '/blog/post' %}active{% endif %}">
+                            <a class="nav-link" href="/blog/post">MyShare</a>
+                        </li>
+                    </ul>
                     <div>
                         <a class="btn btn-outline-success" href="/user/logout">退出登陆</a>
                     </div>

@@ -13,6 +13,8 @@ class User(db.Model):
     photo = db.Column(db.String(128), default='/static/img/default')
     hobbit = db.Column(db.String(20))
     des = db.Column(db.Text)
+    follow = db.Column(db.Integer,nullable=False,default=0)
+    fans = db.Column(db.Integer, nullable=False, default=0)
 
     @classmethod
     def fake_users(cls, num):
@@ -28,3 +30,10 @@ class User(db.Model):
         db.session.add_all(users)
         db.session.commit()
         return users
+
+
+class Follow(db.Model):
+    __tablename__ = 'follow'
+
+    uid = db.Column(db.Integer, primary_key=True)
+    fid = db.Column(db.Integer, primary_key=True)

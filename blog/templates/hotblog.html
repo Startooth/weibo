@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block all %}
+<style>
+    .a1:link {color: #392f41;}
+    .a1:visited {color: #392f41}
+    .a1:hover {color: #88ada6;text-decoration: none;}
+    .a1:active {color: #f0fcff}
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    <ul>
+        {% for item in blogs %}
+        <li>
+            <div class="alert alert-warning">
+                <img style="width: 50px;border-radius: 50px;" src='{{ item.author.photo }}'>
+                &nbsp;&nbsp;<strong>{{ item.username }}</strong>&nbsp;&nbsp;{{ item.lasttime }}
+                <div class="form-row">
+                    <div class="form-group col-md-11">
+                        <a class='a1' href="/user/show?username={{ item.username }}&wid={{ item.wid }}&page=1">
+                            <div class="col-6 text-truncate">
+                                {{ item.content[:20] | replace('\n','<br>') | safe }}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="form-group col-md-1">
+                        <svg class="bi" width="25" height="25" fill="currentColor" style="color:#ff4777;">
+                            <use xlink:href="/static/css/bootstrap-icons.svg#hand-thumbs-up" />
+                        </svg>
+                        <span class="align-text-top">{{ item.thumb }}</span>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </li>
+        {% else %}
+        <p>还没有人发表微博呢</p>
+        {% endfor %}
+    </ul>
+</div>
+</div>
+{% endblock %}

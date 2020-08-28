@@ -8,7 +8,7 @@ from flask import session
 from libs.orm import db
 from libs.utils import checkout
 from blog.models import Blog, Comment, Thumb
-from user.models import User
+from user.models import User, Follow
 
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
@@ -19,6 +19,7 @@ blog_bp.template_folder = './templates'
 @checkout
 def idnex():
     '''查看主页'''
+    # 获取当前页码
     page = int(request.args.get('page', 1))
     per_page = 30
     offset = per_page * (page - 1)
@@ -32,9 +33,7 @@ def idnex():
     else:
         start, end = (page - 3), (page + 3)
     pages = range(start, end + 1)
-    # 获取当前页码
-    index = int(request.args.get('page'))
-    return render_template('home.html',data=data,pages=pages,max=max_page,index=index)
+    return render_template('home.html',data=data,pages=pages,max=max_page,index=page)
 
 
 @blog_bp.route('/post',methods=('POST','GET'))
@@ -43,6 +42,8 @@ def post():
     '''发表微博'''
     if request.method == 'POST':
         content = request.form.get('content')
+        if not content:
+            return render_template('post.html', msg='内容不能为空')
         time = datetime.datetime.now()
         lasttime = datetime.datetime.strftime(time, '%Y-%m-%d %H:%M:%S')
         username = session['username']
@@ -81,6 +82,7 @@ def modify():
         blog = Blog.query.filter_by(wid=wid).one()
         return render_template('post.html',op='mine',blog=blog)
 
+
 @blog_bp.route('/delete')
 @checkout
 def delete():
@@ -90,6 +92,7 @@ def delete():
     db.session.delete(old_blog)
     db.session.commit()
     return redirect('/user/info')
+
 
 @blog_bp.route('/comment',methods=('POST',))
 def comment():
@@ -121,12 +124,6 @@ def drop():
     return redirect('/blog/index')
 
 
-@blog_bp.route('/follow')
-def follow():
-    '''关注'''
-    pass
-
-
 @blog_bp.route('/thumb')
 def thumb():
     '''微博点赞/取消赞'''
@@ -134,19 +131,33 @@ def thumb():
     wid = int(request.args.get('wid'))
     thumb_n = int(request.args.get('thumb'))
     page = request.args.get('page')
-    before = Blog.query.get(wid)
 
     if thumb_n == 1:
         thumb = Thumb(uid=uid,wid=wid)
-        Blog.query.filter_by(wid=wid).update({'thumb':(before.thumb + 1)})
+        Blog.query.filter_by(wid=wid).update({'thumb':Blog.thumb + 1})
         db.session.add(thumb)
     else:
         Thumb.query.filter_by(wid=wid).filter_by(uid=uid).delete()
-        Blog.query.filter_by(wid=wid).update({'thumb':(before.thumb - 1)})
+        Blog.query.filter_by(wid=wid).update({'thumb':Blog.thumb - 1})
     db.session.commit()
     return redirect(f'/user/show?page={page}&wid={wid}')
+
+
+@blog_bp.route('/attention')
+def attention():
+    '''我关注的人的微博'''
+    uid = session['uid']
+    fid = Follow.query.filter_by(uid=uid).values('fid')
+    fid_list = [fid for (fid,) in fid]
+    fname = User.query.filter(User.uid.in_(fid_list)).values('username')
+    fname_list = [username for (username,) in fname]
+
+    blogs = Blog.query.filter(Blog.username.in_(fname_list)).order_by(Blog.lasttime.desc()).limit(50)
+
+    return render_template('attention.html', blogs=blogs)
 
 @blog_bp.route('/hot')
 def hot():
     '''查看热门微博'''
-    pass
+    blogs = Blog.query.order_by(Blog.thumb.desc()).limit(50)
+    return render_template('hotblog.html',blogs=blogs)
