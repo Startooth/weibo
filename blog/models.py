@@ -15,7 +15,7 @@ class Blog(db.Model):
 
     @property
     def author(self):
-        return User.query.get(self.username)
+        return User.query.filter_by(username=self.username).one()
 
     @classmethod
     def fake_weibos(cls, username_list, num):

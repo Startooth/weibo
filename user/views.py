@@ -9,7 +9,6 @@ from libs.utils import checkout, save_avatar, make_password, check_password
 
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 user_bp.template_folder = './templates'
-# user_bp.static_folder = './static'
 
 
 @user_bp.route('/login',methods=('POST','GET'))
@@ -105,8 +104,7 @@ def show():
     page = request.args.get('page')
     wid = request.args.get('wid')
     op = request.args.get('op',0)
-    blog = Blog.query.filter_by(wid=wid).one()
-    user = User.query.filter_by(username=username).one()
+    blog = Blog.query.get(wid)
 
     # 获取当前文章评论
     comment = Comment.query.filter_by(wid=wid).order_by(Comment.time.desc())
@@ -114,7 +112,7 @@ def show():
     # 确认当前文章是否被当前用户点赞
     uid = session['uid']
     thumb = int(Thumb.query.filter_by(uid=uid).filter_by(wid=wid).count())
-    return render_template('show.html', blog=blog, user=user,op=op,page=page,comment=comment,thumb=thumb)
+    return render_template('show.html', blog=blog, op=op,page=page,comment=comment,thumb=thumb)
 
 
 @user_bp.route('/logout')

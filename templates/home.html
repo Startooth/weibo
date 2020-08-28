@@ -35,11 +35,7 @@
         {% for item in data %}
         <li>
             <div class="alert alert-warning">
-                {% for user in users %}
-                {% if user.username == item.username %}
-                <img style="width: 50px;border-radius: 50px;" src='{{ user.photo }}'>
-                {% endif %}
-                {% endfor %}
+                <img style="width: 50px;border-radius: 50px;" src='{{ item.author.photo }}'>
                 &nbsp;&nbsp;<strong>{{ item.username }}</strong>&nbsp;&nbsp;{{ item.lasttime }}
                 <div>
                     <div>

@@ -13,7 +13,6 @@ from user.models import User
 
 blog_bp = Blueprint('blog', __name__, url_prefix='/blog')
 blog_bp.template_folder = './templates'
-# blog_bp.static_folder = './static'
 
 
 @blog_bp.route('/index')
@@ -23,7 +22,7 @@ def idnex():
     page = int(request.args.get('page', 1))
     per_page = 30
     offset = per_page * (page - 1)
-    data = Blog.query.order_by(Blog.lasttime.desc()).limit(per_page).offset(offset).all()
+    data = Blog.query.order_by(Blog.lasttime.desc()).limit(per_page).offset(offset)
     # 显示分页
     max_page = math.ceil(Blog.query.count() / per_page)
     if page <= 3:
@@ -33,14 +32,9 @@ def idnex():
     else:
         start, end = (page - 3), (page + 3)
     pages = range(start, end + 1)
-    # 取出每页对应user的信息
-    users = []
-    for item in data:
-        users.append(User.query.filter_by(username=item.username).one())
-    users = list(set(users))
     # 获取当前页码
     index = int(request.args.get('page'))
-    return render_template('home.html',data=data,pages=pages,users=users,max=max_page,index=index)
+    return render_template('home.html',data=data,pages=pages,max=max_page,index=index)
 
 
 @blog_bp.route('/post',methods=('POST','GET'))
