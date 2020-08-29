@@ -14,13 +14,13 @@
     <form action="/user/modify" method="POST" enctype="multipart/form-data">
         <div>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" value="{{ user.username }}"/>
+                <input class="input__field input__field--yoko" type="text" name='username' value="{{ user.username }}"/>
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Username</span>
                 </label>
             </span>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" />
+                <input class="input__field input__field--yoko" type="password" name='password' />
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Password</span>
                 </label>
@@ -28,13 +28,13 @@
         </div>
         <div>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" value="{{ user.phone }}"/>
+                <input class="input__field input__field--yoko" type="text" name='phone' value="{{ user.phone }}"/>
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Phone</span>
                 </label>
             </span>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" value="{{ user.city }}" />
+                <input class="input__field input__field--yoko" type="text" name='city' value="{{ user.city }}" />
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">City</span>
                 </label>
@@ -42,13 +42,13 @@
         </div>
         <div>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" value="{{ user.hobbit }}" />
+                <input class="input__field input__field--yoko" type="text" name='hobbit' value="{{ user.hobbit }}" />
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Hobbit</span>
                 </label>
             </span>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="text" value="{{ user.des }}" />
+                <input class="input__field input__field--yoko" type="text" name='des' value="{{ user.des }}" />
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Bio</span>
                 </label>
@@ -67,13 +67,12 @@
             </div>
             <div class="custom-file" style="float: left;width: 400px;">
                 <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="photo">
-                <label class="custom-file-label" for="customFileLang">上传头像...</label>
+                <label class="custom-file-label">上传头像...</label>
             </div>
         </div>
         <div style="clear: both;margin-top: 150px;">
-            <button type="submit" class="btn btn-outline-danger" style="margin-bottom: 100px;">
-                <strong>完成修改</strong>
-            </button>
+            <input type="submit" class="btn btn-outline-danger" style="margin-bottom: 100px;" value="完成修改">
+                
         </div>
     </form>
 </section>
