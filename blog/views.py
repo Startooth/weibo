@@ -99,21 +99,24 @@ def comment():
     '''发表评论/回复评论'''
     content = request.form.get('content')
     wid = int(request.form.get('wid'))
-    cid = int(request.form.get('cid',0))
+    cid = int(request.form.get('cid', 0))
     page = request.form.get('page')
-    time = datetime.datetime.now()
+    if content:
+        time = datetime.datetime.now()
+        comment = Comment(uid=session['uid'], wid=wid, cid=cid, content=content, time=time)
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(f'/user/show?wid={wid}&page={page}')
+    else:
+        return render_template('response.html', msg='内容不能为空')
 
-    comment = Comment(uid=session['uid'], wid=wid, cid=cid, content=content, time=time)
-    db.session.add(comment)
-    db.session.commit()
-
-    return redirect(f'/user/show?wid={wid}&page={page}')
 
 
 @blog_bp.route('/drop')
 def drop():
     '''删除评论'''
     cid = int(request.args.get('cid'))
+    page = int(request.args.get('page'))
     cmt = Comment.query.get(cid)
     # 检查是否是在删除别人的评论
     if cmt.uid != session['uid']:
@@ -121,7 +124,7 @@ def drop():
     # 修改数据
     cmt.content = '当前评论已被删除'
     db.session.commit()
-    return redirect('/blog/index')
+    return redirect(f'/blog/index?page={page}')
 
 
 @blog_bp.route('/thumb')

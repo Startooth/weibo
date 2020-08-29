@@ -132,10 +132,8 @@ def show():
     wid = request.args.get('wid')
     op = request.args.get('op',0)
     blog = Blog.query.get(wid)
-
     # 获取当前文章评论
     comment = Comment.query.filter_by(wid=wid).order_by(Comment.time.desc())
-
     # 确认当前文章是否被当前用户点赞
     uid = session.get('uid')
     if uid:

@@ -101,7 +101,7 @@
         <div style="float: right;">
             {% if session.uid == cmt.uid %}
             {% if cmt.content != '当前评论已被删除' %}
-            <a class="text-danger" href="/blog/drop?cid={{ cmt.id }}">删除该评论</a>
+            <a class="text-danger" href="/blog/drop?cid={{ cmt.id }}&page={{ page }}">删除该评论</a>
             {% endif %}
             {% endif %}
         </div>
