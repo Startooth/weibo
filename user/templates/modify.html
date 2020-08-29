@@ -1,71 +1,97 @@
 {% extends 'base.html' %}
+{% block all %}
+<meta name="description" content="Simple ideas for enhancing text input interactions" />
+<meta name="keywords" content="input, text, effect, focus, transition, interaction, inspiration, web design" />
+<link rel="stylesheet" type="text/css" href="/static/css2/normalize.css" />
+<link rel="stylesheet" type="text/css" href="/static/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/css2/demo.css" />
+<link rel="stylesheet" type="text/css" href="/static/css2/set1.css" />
+{% endblock %}
+
 {% block content %}
-<form action="/user/modify" method="POST" enctype="multipart/form-data">
-    <div style="float: left;">
-    <table class="table table-borderless">
-        <tr>
-            <td><span class="align-text-top">Username</span></td>
-            <td>
-                <input type="text" class="form-control" name='username' value="{{ user.username }}">
-            </td>
-        </tr>
-        <tr>
-            <td><span class="align-text-top">Password</span></td>
-            <td>
-                <input type="password" class="form-control" name='password'>
-            </td>
-        </tr>
-        <tr>
-            <td><span class="align-text-top">Phone</span></td>
-            <td>
-                <input type="text" class="form-control" name='phone' value="{{ user.phone }}">
-            </td>
-        </tr>
-        <tr>
-            <td><span class="align-text-top">Gender</span></td>
-            <td>
-                小哥哥<input type="radio" name='gender' value="男" {% if user.gender == '男' %}checked{% endif %}>
-                小姐姐<input type="radio" name='gender' value="女" {% if user.gender == '女' %}checked{% endif %}>
-                不能说哦<input type="radio" name='gender' value="保密" {% if user.gender == '保密' %}checked{% endif %}>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="photo">
-                    <label class="custom-file-label" for="customFileLang">上传头像...</label>
-                </div>
-            </td>
-        </tr>
-    </table>
-    </div>
-    <div style="float: right;">
-    <p>More Informations</p>
-    <table class="table table-borderless">
-        <tr>
-            <td><span class="align-text-top">City</span></td>
-            <td>
-                <input type="text" class="form-control" name='city' value="{{ user.city }}">
-            </td>
-        </tr>
-        <tr>
-            <td><span class="align-text-top">Hobbit</span></td>
-            <td>
-                <input type="text" class="form-control" name='hobbit' value="{{ user.hobbit }}">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">Bio</td>
-        </tr>
-        <tr>
-            <td colspan="2" rowspan="3">
-                <textarea name="des" cols="40" rows="3">{{ user.des }}</textarea>
-            </td>
-        </tr>
-    </table>
-    </div>
-    <div style="clear: both;margin-left: 420px;">
-        <button type="submit" class="btn btn-primary">完成修改</button>
-    </div>
-</form>
+<section>
+    <h2 class="nomargin-bottom" style="color:firebrick">修改个人信息</h2>
+    <form action="/user/modify" method="POST" enctype="multipart/form-data">
+        <div>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" value="{{ user.username }}"/>
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">Username</span>
+                </label>
+            </span>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" />
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">Password</span>
+                </label>
+            </span>
+        </div>
+        <div>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" value="{{ user.phone }}"/>
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">Phone</span>
+                </label>
+            </span>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" value="{{ user.city }}" />
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">City</span>
+                </label>
+            </span>
+        </div>
+        <div>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" value="{{ user.hobbit }}" />
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">Hobbit</span>
+                </label>
+            </span>
+            <span class="input input--minoru">
+                <input class="input__field input__field--yoko" type="text" value="{{ user.des }}" />
+                <label class="input__label input__label--yoko">
+                    <span class="input__label-content input__label-content--yoko">Bio</span>
+                </label>
+            </span>
+        </div>
+        <h2 class="nomargin-bottom" style="color:firebrick">更多信息</h2>
+        <div style="color: firebrick;margin-left: 60px;margin-top: 50px;">
+            <div style="float: left;margin-right: 50px;margin-top: 10px;" >
+                <label><strong>Gender:</strong></label>&emsp;
+                <strong>小哥哥</strong>&emsp;
+                <input type="radio" name='gender' value="男" {% if user.gender == '男' %}checked{% endif %}>
+                <strong>小姐姐</strong>&emsp;
+                <input type="radio" name='gender' value="女" {% if user.gender == '女' %}checked{% endif %}>
+                <strong>不能说哦</strong>
+                <input type="radio" name='gender' value="保密" {% if user.gender == '保密' %}checked{% endif %}>
+            </div>
+            <div class="custom-file" style="float: left;width: 400px;">
+                <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="photo">
+                <label class="custom-file-label" for="customFileLang">上传头像...</label>
+            </div>
+        </div>
+        <div style="clear: both;margin-top: 150px;">
+            <button type="submit" class="btn btn-outline-danger" style="margin-bottom: 100px;">
+                <strong>完成修改</strong>
+            </button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    (function () {
+        [].slice.call(document.querySelectorAll('input.input__field')).forEach(function (inputEl) {
+            // in case the input is already filled..
+            if (inputEl.value.trim() !== '') {
+                classie.add(inputEl.parentNode, 'input--filled');
+            }
+            // events:
+            inputEl.addEventListener('focus', onInputFocus);
+            inputEl.addEventListener('blur', onInputBlur);
+        });
+    })();
+</script>
 {% endblock %}

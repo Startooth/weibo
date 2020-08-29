@@ -9,10 +9,10 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     gender = db.Column(db.Enum('男', '女', '保密'), default='保密')
     phone = db.Column(db.String(16), unique=True, nullable=False)
-    city = db.Column(db.String(16))
+    city = db.Column(db.String(16), nullable=False, default='暂无')
     photo = db.Column(db.String(128), default='/static/img/default')
-    hobbit = db.Column(db.String(20))
-    des = db.Column(db.Text)
+    hobbit = db.Column(db.String(20), nullable=False, default='暂无')
+    des = db.Column(db.Text,nullable=False, default='暂无')
     follow = db.Column(db.Integer,nullable=False,default=0)
     fans = db.Column(db.Integer, nullable=False, default=0)
 

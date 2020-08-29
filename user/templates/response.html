@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-{{ msg }}
-{% if msg == '修改成功' %}
-<a href="/user/info">跳转到用户信息页面</a>
-{% elif msg == '请先登录！' %}
-<a href="/">跳转到用户信息页面</a>
-{% endif %}
+<div class="jumbotron">
+    <h1 class="display-4">{{ msg }}</h1>
+    <hr class="my-4">
+    {% if msg == '修改成功' %}
+    <p>跳转到用户信息页面</p>
+    <a class="btn btn-primary btn-lg" href="/user/info" role="button">点击跳转</a>
+    {% elif msg == '请先登录！' %}
+    <a class="btn btn-primary btn-lg" href="/" role="button">点击跳转</a>
+    {% endif %}
+</div>
 {% endblock %}
