@@ -99,10 +99,14 @@ def modify():
         city = request.form.get('city')
         hobbit = request.form.get('hobbit')
         des = request.form.get('des')
+        if not password:
+            return render_template('response.html', msg='密码不能为空')
 
         photo = request.files.get('photo')
         if photo:
             photo = save_avatar(photo)
+        else:
+            photo = User.query.filter_by(username=username).one().photo
         old_user = User.query.filter_by(username=username)
         old_user.update({
                 'username': username, 'password': make_password(password), 

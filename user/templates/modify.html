@@ -20,7 +20,7 @@
                 </label>
             </span>
             <span class="input input--minoru">
-                <input class="input__field input__field--yoko" type="password" name='password' />
+                <input class="input__field input__field--yoko" type="password" name='password' value="{{ user.password }}"/>
                 <label class="input__label input__label--yoko">
                     <span class="input__label-content input__label-content--yoko">Password</span>
                 </label>
@@ -71,8 +71,9 @@
             </div>
         </div>
         <div style="clear: both;margin-top: 150px;">
-            <input type="submit" class="btn btn-outline-danger" style="margin-bottom: 100px;" value="完成修改">
-                
+            <button type="submit" class="btn btn-outline-danger" style="margin-bottom: 100px;">
+                <strong>完成修改</strong>
+            </button>
         </div>
     </form>
 </section>
